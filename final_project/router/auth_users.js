@@ -19,21 +19,22 @@ const authenticatedUser = (username, password) => {
 
 // /customer/login
 regd_users.post("/login", (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-
-  if (!username || !password) {
-    return res.status(400).json({ message: "Missing username or password" });
-  } else if (!authenticatedUser(username, password)) {
-    return res.status(401).json({ message: "Incorrect username or password" });
-  } else {
-    const accessToken = jwt.sign({ data: password }, "access", {
-      expiresIn: 60 * 60,
-    });
-    req.session.authorization = { accessToken, username };
-    return res.status(200).json({ message: "User successfully logged in." });
-  }
-});
+    const username = req.body.username;
+    const password = req.body.password;
+  
+    if (!username || !password) {
+      return res.status(400).json({ message: "Missing username or password" });
+    } else if (!authenticatedUser(username, password)) {
+      return res.status(401).json({ message: "Incorrect username or password" });
+    } else {
+      const accessToken = jwt.sign({ data: password }, "access", {
+        expiresIn: 60 * 60,
+      });
+      req.session.authorization = { accessToken, username };
+      return res.status(200).json({ message: "User successfully logged in." });
+    }
+  });
+  
 
 // Add a book review
 // /customer/auth/:isbn
@@ -64,6 +65,8 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
     res.status(200).json({ message: "Book review deleted." });
   }
 });
+
+
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
